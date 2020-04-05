@@ -1,0 +1,22 @@
+{
+  "name": "manageserver",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/main.js"
+  },
+  "dependencies": {
+    "connect-mongo": "^3.2.0",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "express-session": "^1.17.0",
+    "http-errors": "~1.6.3",
+    "mongoose": "^5.9.6",
+    "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  }
+}
