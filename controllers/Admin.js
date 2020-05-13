@@ -4,13 +4,13 @@ class AdminController {
     Login(req, res, next) {
         const account = req.body.account;
         Admin.find({
-                $or: [{
-                    name: account
-                }, {
-                    phone: account
-                }],
-                password: req.body.password
-            }, "name phone")
+            $or: [{
+                name: account
+            }, {
+                phone: account
+            }],
+            password: req.body.password
+        }, "name phone")
             .then(admin => {
                 if (admin.length) {
                     req.session.adminId = admin[0]._id
@@ -28,12 +28,11 @@ class AdminController {
     }
     Register(req, res, next) {
         Admin.find({
-                $or: [{
-                    name: req.body.name
-                }, {
-                    phone: req.body.phone
-                }]
-            })
+            $or: [
+                { name: req.body.name },
+                { phone: req.body.phone }
+            ]
+        })
             .then(admin => {
                 if (admin.length)
                     throw {
@@ -57,8 +56,23 @@ class AdminController {
     }
     EditInfo(req, res, next) {
         let update = req.body;
-        delete update._id;
-        Admin.findById(req.body._id || req.session.adminId).updateOne(update).then(admin => {
+        Admin.find({
+            $or: [
+                { name: update.name },
+                { phone: update.phone }
+            ],
+            _id: { $ne: update._id }
+        }).then(admins => {
+            if (admins.length)
+                throw {
+                    status: -1,
+                    message: "用户名或手机号已被占用"
+                }
+            else {
+                delete update._id;
+                return Admin.findById(req.body._id || req.session.adminId).updateOne(update)
+            }
+        }).then(admin => {
             if (req.body.password) req.session.destroy()
             res.json({
                 status: 200,

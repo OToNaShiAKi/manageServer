@@ -42,14 +42,10 @@ class ListController {
     List.find({
       enable: true
     }).then(lists => {
-      if (lists.length) res.json({
+      res.json({
         status: 200,
         message: "获取列表成功",
         lists
-      })
-      else res.json({
-        status: -1,
-        message: "列表尚无数据",
       })
     }).catch((err) => next(err));
   }
@@ -65,9 +61,7 @@ class ListController {
       return List.find({
         house: list.house,
         enable: true,
-        _id: {
-          $ne: list._id
-        }
+        _id: { $ne: list._id }
       }, '-_id repeat day startTime endTime')
     }).then(lists => {
       if (lists.length)
