@@ -11,7 +11,7 @@ connection.on("open", () => {
     console.log("数据库已连接")
 })
 connection.on("error", err => {
-    console.log(error)
+    console.log(err)
     disconnect();
 })
 connection.on('close', () => {
