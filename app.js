@@ -5,9 +5,6 @@ import {
 
 const app = express();
 
-app.set("views", join(__dirname, "views"));
-app.set("view engine", "pug");
-
 import cors from "./middlewares/cors";
 app.use(cors);
 
