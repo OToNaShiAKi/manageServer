@@ -1,33 +1,40 @@
-import express from "express";
+const Koa = require("koa");
+const app = new Koa();
+const json = require("koa-json");
+const onerror = require("koa-onerror");
+const bodyparser = require("koa-bodyparser");
+const logger = require("koa-logger");
 
-const app = express();
+const lists = require("./routes/lists");
+const users = require("./routes/users");
 
-import cors from "./middlewares/cors";
-app.use(cors);
+// error handler
+onerror(app);
 
-import './middlewares/mongo'
-import session from './middlewares/session'
-app.use(session);
+// middlewares
+app.use(
+  bodyparser({
+    enableTypes: ["json", "form", "text"],
+  })
+);
+app.use(json());
+app.use(logger());
 
-app.use(express.json());
-app.use(express.urlencoded({
-  extended: false
-}));
+// logger
+app.use(async (ctx, next) => {
+  const start = new Date();
+  await next();
+  const ms = new Date() - start;
+  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+});
 
-import admin from './middlewares/admin'
-app.use(admin);
+// routes
+app.use(lists.routes(), lists.allowedMethods());
+app.use(users.routes(), users.allowedMethods());
 
-import adminRouter from "./routes/admin";
-app.use("/admin", adminRouter);
-
-import listRouter from "./routes/list";
-app.use("/list", listRouter);
-
-import {
-  notFound,
-  error
-} from './middlewares/error'
-app.use(notFound);
-app.use(error);
+// error-handling
+app.on("error", (err, ctx) => {
+  console.error("server error", err, ctx);
+});
 
 module.exports = app;

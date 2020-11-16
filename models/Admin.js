@@ -1,23 +1,28 @@
-import {
-    model,
-    Schema
-} from 'mongoose'
+const { model, Schema } = require("mongoose");
 
-const Adminchema = new Schema({
-    name: {
-        type: String,
-        require: true
-    },
-    phone: {
-        type: String,
-        require: true
-    },
-    password: {
-        type: String,
-        require: true
-    }
-})
+const schema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  uid: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  root: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-const Admin = model('admin', Adminchema)
+const Admin = model("admin", schema);
 
 export default Admin;
