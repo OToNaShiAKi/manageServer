@@ -25,4 +25,4 @@ const schema = new Schema({
 
 const Admin = model("admin", schema);
 
-export default Admin;
+module.exports = Admin;
